@@ -86,8 +86,8 @@ With this statement, the side effects and the memory leak are avoided.
 
 ### Summary
 __ALWAYS unsubscribe if the observable does not complete or if you are not sure if it completes, 
-when using 1. code with side effects or 2. accessing member variables in the callback.__
-
+since the callback logic still runs in the background otherwise, 
+possibly creating memory leaks and unwanted side effects.__
 
 ## Observables that eventually complete
 We created the component ``RxjsTimerComplete``. It contains the following observable:
@@ -314,13 +314,16 @@ If the callback executes code with side effects you should always unsubscribe.
 If the callback uses member variables from the component class there can be a memory leak when using observables that don't complete, 
 therefore you should unsubscribe in that case.
 
-|                                        | Side effects    | Memory leaks |
-|----------------------------------------|-----------------|--------------|
-| _Observables that don't complete_      | Possible(1)     | Possible(2)  |
-| _Observables that eventually complete_ | Possible(1)     | No           |
-| _Angular HttpClient_                   | Possible(1)     | No           |
+Observables that don't complete should be cancelled (almost) always, 
+since the callback logic still runs (infinitely) in the background otherwise.
 
-Possible(1): If you execute methods with side effects in the callback.
+|                                        | Side effects    | Memory leaks | Should unsubscribe |
+|----------------------------------------|-----------------|--------------|--------------------|
+| _Observables that don't complete_      | Possible(1)     | Possible(2)  | Yes                |
+| _Observables that eventually complete_ | Possible(1)     | No           | Depends(1)         |
+| _Angular HttpClient_                   | Possible(1)     | No           | Depends(1)         |
+
+Possible(1) / Depends(1): If you execute methods with side effects in the callback.
 
 Possible(2): If you use member variables from the component in the callback.
 
