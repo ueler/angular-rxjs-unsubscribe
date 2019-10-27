@@ -319,13 +319,15 @@ since the callback logic still runs (infinitely) in the background otherwise.
 
 |                                        | Side effects    | Memory leaks | Should unsubscribe |
 |----------------------------------------|-----------------|--------------|--------------------|
-| _Observables that don't complete_      | Possible(1)     | Possible(2)  | Yes                |
-| _Observables that eventually complete_ | Possible(1)     | No           | Depends(1)         |
-| _Angular HttpClient_                   | Possible(1)     | No           | Depends(1)         |
+| _Observables that don't complete_      | Possible (1)    | Possible (2) | Yes                |
+| _Observables that eventually complete_ | Possible (1)    | No (3)       | Depends (1)        |
+| _Angular HttpClient_                   | Possible (1)    | No (3)       | Depends (1)        |
 
-Possible(1) / Depends(1): If you execute methods with side effects in the callback.
+(1): If you execute methods with side effects in the callback.
 
-Possible(2): If you use member variables from the component in the callback.
+(2): If you use member variables from the component in the callback.
+
+(3): Assuming the observable completes.
 
 ## TODO
 - Explain effect on component tree
