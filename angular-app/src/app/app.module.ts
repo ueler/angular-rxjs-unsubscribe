@@ -11,6 +11,8 @@ import {HttpClientModule} from '@angular/common/http';
 import { GatherSubscriptionsComponent } from './unsubscription-methods/gather-subscriptions/gather-subscriptions.component';
 import { TakeUntilComponent } from './unsubscription-methods/take-until/take-until.component';
 import { UntilDestroyedComponent } from './unsubscription-methods/until-destroyed/until-destroyed.component';
+import { RouterParamMapComponent } from './router-param-map/router-param-map.component';
+import { RouterEventsComponent } from './router-events/router-events.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { UntilDestroyedComponent } from './unsubscription-methods/until-destroye
     HttpclientComponent,
     GatherSubscriptionsComponent,
     TakeUntilComponent,
-    UntilDestroyedComponent
+    UntilDestroyedComponent,
+    RouterParamMapComponent,
+    RouterEventsComponent
   ],
   imports: [
     BrowserModule,

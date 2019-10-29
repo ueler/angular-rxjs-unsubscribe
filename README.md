@@ -194,6 +194,60 @@ Many get that wrong, since they have almost no latency in their network calls wh
 If you do not execute methods with unwanted side effects, you do not have to unsubscribe.
 Memory leaks are avoided by the HttpClient as the observable completes itself.
 
+## Angular routing: ParamMap and QueryParamMap (ActivatedRoute) observables
+The Angular documentation already gives the answer if we should unsubscribe in this case:
+
+> When subscribing to an observable in a component, you almost always arrange to unsubscribe when the component is destroyed. 
+> 
+> There are a few exceptional observables where this is not necessary. The ActivatedRoute observables are among the exceptions.
+>
+> The ActivatedRoute and its observables are insulated from the Router itself. The Router destroys a routed component when it is no longer needed and the injected ActivatedRoute dies with it.
+> Feel free to unsubscribe anyway. It is harmless and never a bad practice.
+
+We created the component ``RouterParamMapComponent`` to verify this by an example.
+The example used the following code (for the queryParamMap) in the ``ngOnInit()`` method.
+```
+this.activatedRoute.queryParamMap.subscribe((queryParamMap) => {
+  this.queryParamMap = queryParamMap;
+  this.titleService.setTitle(queryParamMap.get('queryParam'));
+});
+```
+
+### Outcomes and summary
+The component gets garbage collected (after the second navigation from the component, not the first) and no side-effects
+ were noticed. The callback is not executed anymore after navigated away from the component.
+ 
+So the statement from the documentation is correct and you don't have to manually unsubscribe when using observables
+from ``ActivatedRoute``.
+
+NOTE: This is only valid for ``ActivatedRoute`` observables and not for other router observables (as shown below)!
+
+
+## Angular routing: Router events (NavigationStart, etc...)
+We created the component ``RouterEventsComponent`` with the following subscription in ``ngOnInit``:
+```
+this.router.events.subscribe((event) => {
+  console.log('routerEvent', event);
+  this.event = event;
+});
+```
+To investigate how this observable behaves, we navigated to the component and then navigated to other components afterwards.
+
+## Outcomes
+### Side effects
+The observables callback is still executed even when the component is destroyed. So there can be unwanted side effects,
+when using certain code in the callback.
+
+### Memory leak
+The above version creates a memory leak, since we use a reference to the component in the callback. 
+Each time we navigate to the component a new dangling component (that cannot be garbage collected) is created.
+If no reference is used, the component gets garbage collected.
+
+## Summary
+You should always unsubscribe when using the events observables from the ``Router`` in components 
+(there is one exception tough, namely if you use it in the root component) as the subscription is still alive, even if
+the component was destroyed by Angular.
+
 ## Recommended ways to unsubscribe
 The obvious way of unsubscribing is how it is done in our examples: Assign the subscription to a class 
 property and unsubscribe in the ``ngOnDestroy()`` method.
@@ -322,12 +376,16 @@ since the callback logic still runs (infinitely) in the background otherwise.
 | _Observables that don't complete_      | Possible (1)    | Possible (2) | Yes                |
 | _Observables that eventually complete_ | Possible (1)    | No (3)       | Depends (1)        |
 | _Angular HttpClient_                   | Possible (1)    | No (3)       | Depends (1)        |
+| _Angular ActivatedRoute_               | No              | No           | No (4)             |
+| _Angular Router events_                | Possible (1)    | Possible (2) | Yes                |
 
 (1): If you execute methods with side effects in the callback.
 
 (2): If you use member variables from the component in the callback.
 
 (3): Assuming the observable completes.
+
+(4): You don't have to, but are free to unsubscribe anyway.
 
 ## TODO
 - Explain effect on component tree

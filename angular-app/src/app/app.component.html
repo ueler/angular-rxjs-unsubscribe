@@ -12,6 +12,19 @@
   <li>
     <a [routerLink]="RoutingLinks.httpClient">Angular HttpClient</a>
   </li>
+  <li>
+    <a [routerLink]="RoutingLinks.paramMap" [queryParams]="{'queryParam': 'queryParamTest'}">
+      Angular Router ParamMap (queryParam)
+    </a>
+  </li>
+  <li>
+    <a [routerLink]="[RoutingLinks.paramMap, 'paramTest']" [queryParams]="{'queryParam': 'queryParamTest'}">
+      Angular Router ParamMap with (param and queryParam)
+    </a>
+  </li>
+  <li>
+    <a [routerLink]="RoutingLinks.routerEvents">Angular router events</a>
+  </li>
 </ul>
 <hr>
 <router-outlet></router-outlet>
