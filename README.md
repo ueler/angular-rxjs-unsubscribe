@@ -7,14 +7,34 @@ that contains all relevant information explained by examples.
 
 This repository provides the necessary Angular project to examine the problems by yourself and a guide for common situations.
 
-### Some resources:
-##### Angular/RxJs When should I unsubscribe from Subscription:
-https://stackoverflow.com/questions/38008334/angular-rxjs-when-should-i-unsubscribe-from-subscription
+## Conclusion
+Whether you have to unsubscribe or not heavily depends on the callback logic you are using.
 
-##### Is it necessary to unsubscribe from observables created by Http methods?
-https://stackoverflow.com/questions/35042929/is-it-necessary-to-unsubscribe-from-observables-created-by-http-methods
+If the callback executes code with side effects you should always unsubscribe.
 
+If the callback uses member variables from the component class there can be a memory leak when using observables that don't complete, 
+therefore you should unsubscribe in that case.
 
+Observables that don't complete should be cancelled (almost) always, 
+since the callback logic still runs (infinitely) in the background otherwise.
+
+|                                        | Side effects    | Memory leaks | Should unsubscribe |
+|----------------------------------------|-----------------|--------------|--------------------|
+| _Observables that don't complete_      | Possible (1)    | Possible (2) | Yes                |
+| _Observables that eventually complete_ | Possible (1)    | No (3)       | Depends (1)        |
+| _Angular HttpClient_                   | Possible (1)    | No (3)       | Depends (1)        |
+| _Angular ActivatedRoute_               | No              | No           | No (4)             |
+| _Angular Router events_                | Possible (1)    | Possible (2) | Yes                |
+
+(1): If you execute methods with side effects in the callback.
+
+(2): If you use member variables from the component in the callback.
+
+(3): Assuming the observable completes.
+
+(4): You don't have to, but are free to unsubscribe anyway.
+
+# Further explanation and examples
 ## How to run the examples by yourself
 The project was set up using the latest [Angular CLI](https://github.com/angular/angular-cli) (version 8.3.6). Therefore you can just clone the repository and run
 ``
@@ -260,7 +280,7 @@ As expected, only the component with the timer does not get garbage collected.
 This is good news, as this means the third party components (as used as in this example) 
 cannot affect memory leaks on your components.
 
-## Recommended ways to unsubscribe
+# Recommended ways to unsubscribe
 The obvious way of unsubscribing is how it is done in our examples: Assign the subscription to a class 
 property and unsubscribe in the ``ngOnDestroy()`` method.
 
@@ -292,7 +312,7 @@ ngOnDestroy() {
 ``` 
 However, same drawbacks here: Cumbersome and obfuscating.
 
-### Unsubscribe with ``takeUntil``
+## Unsubscribe with ``takeUntil``
 A cleaner way of unsubscribing is using ``takeUntil``.
 
 Official docs for ``takeUntil``: ``takeUntil(notifier: Observable<any>)`` — Emits the values emitted by the source Observable until a notifier Observable emits a value.
@@ -331,7 +351,7 @@ Drawbacks: As with the other methods, it's still quite verbose and error-prone.
 
 NOTE: takeUntil operator should always come last (https://blog.angularindepth.com/rxjs-avoiding-takeuntil-leaks-fb5182d047ef)
 
-### Using ``untilDestroyed``
+## Using ``untilDestroyed``
 There is an npm package called ``@ngneat/until-destroy`` (https://github.com/ngneat/until-destroy). 
 
 You can install it (for Angular versions using Ivy) with
@@ -372,29 +392,9 @@ ngOnDestroy() {
 Only drawback: We have to implement ``ngOnDestroy`` everywhere we want to use ``untilDestroyed``.
 However it should be easy to write a linting rule to enforce this.
 
-## Conclusion
-Whether you have to unsubscribe or not heavily depends on the callback logic you are using.
+# Other resources
+### Angular/RxJs When should I unsubscribe from Subscription:
+https://stackoverflow.com/questions/38008334/angular-rxjs-when-should-i-unsubscribe-from-subscription
 
-If the callback executes code with side effects you should always unsubscribe.
-
-If the callback uses member variables from the component class there can be a memory leak when using observables that don't complete, 
-therefore you should unsubscribe in that case.
-
-Observables that don't complete should be cancelled (almost) always, 
-since the callback logic still runs (infinitely) in the background otherwise.
-
-|                                        | Side effects    | Memory leaks | Should unsubscribe |
-|----------------------------------------|-----------------|--------------|--------------------|
-| _Observables that don't complete_      | Possible (1)    | Possible (2) | Yes                |
-| _Observables that eventually complete_ | Possible (1)    | No (3)       | Depends (1)        |
-| _Angular HttpClient_                   | Possible (1)    | No (3)       | Depends (1)        |
-| _Angular ActivatedRoute_               | No              | No           | No (4)             |
-| _Angular Router events_                | Possible (1)    | Possible (2) | Yes                |
-
-(1): If you execute methods with side effects in the callback.
-
-(2): If you use member variables from the component in the callback.
-
-(3): Assuming the observable completes.
-
-(4): You don't have to, but are free to unsubscribe anyway.
+### Is it necessary to unsubscribe from observables created by Http methods?
+https://stackoverflow.com/questions/35042929/is-it-necessary-to-unsubscribe-from-observables-created-by-http-methods
