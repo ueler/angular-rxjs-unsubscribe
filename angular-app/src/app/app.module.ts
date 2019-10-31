@@ -13,6 +13,9 @@ import { TakeUntilComponent } from './unsubscription-methods/take-until/take-unt
 import { UntilDestroyedComponent } from './unsubscription-methods/until-destroyed/until-destroyed.component';
 import { RouterParamMapComponent } from './router-param-map/router-param-map.component';
 import { RouterEventsComponent } from './router-events/router-events.component';
+import { ComponentTreeComponent } from './component-tree/component-tree.component';
+import { SubComponentOneComponent } from './component-tree/sub-component-one/sub-component-one.component';
+import { SubComponentTwoComponent } from './component-tree/sub-component-one/sub-component-two/sub-component-two.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { RouterEventsComponent } from './router-events/router-events.component';
     TakeUntilComponent,
     UntilDestroyedComponent,
     RouterParamMapComponent,
-    RouterEventsComponent
+    RouterEventsComponent,
+    ComponentTreeComponent,
+    SubComponentOneComponent,
+    SubComponentTwoComponent
   ],
   imports: [
     BrowserModule,

@@ -16,7 +16,7 @@ https://stackoverflow.com/questions/35042929/is-it-necessary-to-unsubscribe-from
 
 
 ## How to run the examples by yourself
-The project was set up using the latest Angular CLI. Therefore you can just clone the repository and run
+The project was set up using the latest [Angular CLI](https://github.com/angular/angular-cli) (version 8.3.6). Therefore you can just clone the repository and run
 ``
 npm start
 ``
@@ -233,20 +233,32 @@ this.router.events.subscribe((event) => {
 ```
 To investigate how this observable behaves, we navigated to the component and then navigated to other components afterwards.
 
-## Outcomes
-### Side effects
+### Outcomes
+#### Side effects
 The observables callback is still executed even when the component is destroyed. So there can be unwanted side effects,
 when using certain code in the callback.
 
-### Memory leak
+#### Memory leak
 The above version creates a memory leak, since we use a reference to the component in the callback. 
 Each time we navigate to the component a new dangling component (that cannot be garbage collected) is created.
 If no reference is used, the component gets garbage collected.
 
-## Summary
+### Summary
 You should always unsubscribe when using the events observables from the ``Router`` in components 
 (there is one exception tough, namely if you use it in the root component) as the subscription is still alive, even if
 the component was destroyed by Angular.
+
+## Memory leaks in component trees
+We wondered if a subcomponent of a component with an observable that does not complete could maybe 
+cause a memory leak on the whole component tree upwards.
+
+To this end we created ``ComponentTreeComponent``, which has an infinite time observable in the most inner
+component.
+
+### Outcomes
+As expected, only the component with the timer does not get garbage collected.
+This is good news, as this means the third party components (as used as in this example) 
+cannot affect memory leaks on your components.
 
 ## Recommended ways to unsubscribe
 The obvious way of unsubscribing is how it is done in our examples: Assign the subscription to a class 

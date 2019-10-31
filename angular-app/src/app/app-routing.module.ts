@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {EmptyComponent} from './empty/empty.component';
 import {RxjsTimerComponent} from './rxjs-timer/rxjs-timer.component';
 import {
+  PATH_COMPONENT_TREE,
   PATH_EMPTY,
   PATH_HTTP_CLIENT,
   PATH_ROUTER_EVENTS,
@@ -14,6 +15,7 @@ import {RxjsTimerCompleteComponent} from './rxjs-timer-complete/rxjs-timer-compl
 import {HttpclientComponent} from './httpclient/httpclient.component';
 import {RouterParamMapComponent} from './router-param-map/router-param-map.component';
 import {RouterEventsComponent} from './router-events/router-events.component';
+import {ComponentTreeComponent} from './component-tree/component-tree.component';
 
 
 const routes: Routes = [
@@ -23,7 +25,8 @@ const routes: Routes = [
   {path: PATH_HTTP_CLIENT, component: HttpclientComponent},
   {path: PATH_ROUTER_PARAM_MAP, component: RouterParamMapComponent},
   {path: PATH_ROUTER_PARAM_MAP + '/:param', component: RouterParamMapComponent},
-  {path: PATH_ROUTER_EVENTS, component: RouterEventsComponent}
+  {path: PATH_ROUTER_EVENTS, component: RouterEventsComponent},
+  {path: PATH_COMPONENT_TREE, component: ComponentTreeComponent}
 ];
 
 @NgModule({
