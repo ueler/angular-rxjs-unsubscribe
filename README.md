@@ -398,7 +398,3 @@ since the callback logic still runs (infinitely) in the background otherwise.
 (3): Assuming the observable completes.
 
 (4): You don't have to, but are free to unsubscribe anyway.
-
-## TODO
-- Explain effect on component tree
-- Explain side effects
