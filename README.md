@@ -1,21 +1,35 @@
 # When should I unsubscribe from RxJS observables in Angular?
-There's a lot of confusion in the community about the question if you have to unsubscribe 
+There's a lot of confusion in the community about the question if and when you have to unsubscribe 
 from RxJS observables in Angular.
 
-Although there are some quite nice StackOverflow posts about this questions, there is no clear guidance 
+Although there are some quite nice StackOverflow posts about this question, there is no clear guide 
 that contains all relevant information explained by examples.
 
-This repository provides the necessary Angular project to examine the problems by yourself and a guide for common situations.
+This repository provides a guide for common situations and an Angular project to examine the problems by yourself.
+
+## Angular components and observables
+The guide focuses on issues with components using observables. 
+
+A typical component lifecycle in an Angular CRUD application contains the following steps (in a simplified version):
+1. User navigates to component ``A``
+2. Component ``A`` gets initialized (constructor and ``ngOnInit`` are invoked)
+3. Some logic is called to load data (e.g. using ``HttpClient``).  
+   _Subscriptions to observables are made._
+4. User navigates to another component ``B``
+5. Component ``A`` gets destroyed (``ngOnDestroy`` is invoked)
+6. ...
+
 
 ## Conclusion
-Whether you have to unsubscribe or not heavily depends on the callback logic you are using.
+Whether you have to unsubscribe or not heavily depends on the callback logic you are using in the observables subscription.
 
-If the callback executes code with side effects you should always unsubscribe.
+If the callback executes code with side effects (affecting global application state) you should always unsubscribe
+when the component gets destroyed.
 
-If the callback uses member variables from the component class there can be a memory leak when using observables that don't complete, 
-therefore you should unsubscribe in that case.
+If the callback uses member variables from the component class, there can be a memory leak when using observables 
+that don't complete, therefore you should always unsubscribe in that case.
 
-Observables that don't complete should be cancelled (almost) always, 
+Observables that don't complete should be cancelled always, 
 since the callback logic still runs (infinitely) in the background otherwise.
 
 |                                        | Side effects    | Memory leaks | Should unsubscribe |
@@ -26,12 +40,9 @@ since the callback logic still runs (infinitely) in the background otherwise.
 | _Angular ActivatedRoute_               | No              | No           | No (4)             |
 | _Angular Router events_                | Possible (1)    | Possible (2) | Yes                |
 
-(1): If you execute methods with side effects in the callback.
-
-(2): If you use member variables from the component in the callback.
-
-(3): Assuming the observable completes.
-
+(1): If you execute methods with side effects in the callback.  
+(2): If you use member variables from the component in the callback.  
+(3): Assuming the observable completes.  
 (4): You don't have to, but are free to unsubscribe anyway.
 
 # Further explanation and examples
@@ -48,25 +59,27 @@ folder.
 
 ## The questions and the study method
 We want to answer the following questions in each case study:
-### 1. Can we run into the problem of unwanted side effects?
-To investigate this issue, we use the realistic scenario, that we want to set the document title 
-dynamically on behalf of a observable. To this end, we use the Angular title service (https://angular.io/guide/set-document-title).
 
-We set the title in the observables callback, navigate to the ``EmptyComponent`` 
+### 1. Can we run into the problem of unwanted side effects?
+To investigate this issue, we use the scenario, that we want to set the document title (inside the component we navigated to)
+dynamically on behalf of a observable. 
+To this end, we use the Angular title service (https://angular.io/guide/set-document-title).
+
+In each experiment, we set the title in the observables callback inside component ``XY``, navigate to the ``EmptyComponent`` 
 (which does nothing else than setting its own title), and observe if the title still gets updated.
 
 ### 2. Can we run into the problem of memory leaks?
-We again route from our component of case study to the ``EmptyComponent``. Under normal circumstances, 
-the component we came from should be garbage collected. 
+We navigate from the component ``XY`` with the observable (we want to study) to the ``EmptyComponent``. 
+Under normal circumstances, the component ``XY`` should be garbage collected. 
 However, it can happen that the component cannot be garbage collected due to references used in observable callbacks.
 
 We will use Google Chrome's memory snapshot tool to see if the components get garbage collected or not.
 
 
 ## Observables that don't complete
-The first and most trivial case is that you have an observable, that does not complete.
+The first and most trivial case is an observable that does not complete.
 
-Say you have a timer observable, like in our case study component ``RxjsTimerComponent``
+Say you have a timer observable in your component, like in our case study component ``RxjsTimerComponent``
 ```
 this.subscription = timer(0, 1000)
     .subscribe(() => {
@@ -74,12 +87,13 @@ this.subscription = timer(0, 1000)
         this.titleService.setTitle('Counter ' + this.counter);
     });
 ```
-The is an infinite timer observable, that emits each second. On each emit, we increase a counter and set 
-the document title with the title service.
+This is an infinite timer observable, that executes the callback each second. 
+On each emit, we increase a counter and set the document title with the title service.
 
 ### Outcomes
 #### Side effects
-As expected, after routing to the ``EmptyComponent``, the document title gets updated each second. 
+As expected, after routing from the ``RxjsTimerComponent`` to the ``EmptyComponent``, 
+the document title gets updated each second. 
 So the observable still runs after the ``RxjsTimerComponent`` was destroyed. 
 So we have an unwanted side effect in our example.
 
@@ -89,10 +103,10 @@ get garbage collected. This makes sense, since there is still a reference to ``t
 and ``this.titleService`` in the observables callback method.
 
 In fact, by navigating back and forth between ``EmptyComponent`` and ``RxjsTimerComponent`` we can create many 
-``RxjsTimerComponent`` objects that doesn't get cleaned up. Thus we indeed created a memory leak issue in our example.
+``RxjsTimerComponent`` objects that don't get cleaned up. Thus we indeed created a memory leak in our example.
 
-NOTE: If you don't use any references (like member variables) from the component in the callback, the component gets garbage collected 
-and there is no memory leak.
+NOTE: If you don't use any references (like member variables) from the component in the callback, 
+the component gets garbage collected and there is no memory leak.
 
 ### Countermeasures
 One countermeasure (among others at the end of this readme) is to manually unsubscribe in ``ngOnDestroy``.
