@@ -69,11 +69,11 @@ One way is to assign the subscription to a class property and manually unsubscri
 private subscription: Subscription;
 
 ngOnInit() {
-this.subscription = timer(0, 1000)
-  .subscribe(() => {
-    this.counter++;
-    this.titleService.setTitle('Counter ' + this.counter);
-  });
+    this.subscription = timer(0, 1000)
+      .subscribe(() => {
+        this.counter++;
+        this.titleService.setTitle('Counter ' + this.counter);
+      });
 }
 
 ngOnDestroy() {
