@@ -10,7 +10,7 @@ import {take} from 'rxjs/operators';
 })
 export class RxjsTimerCompleteComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription;
+  private subscription: Subscription;
 
   counter = 0;
 

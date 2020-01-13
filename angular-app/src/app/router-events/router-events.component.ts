@@ -8,7 +8,7 @@ import {Event, Router} from '@angular/router';
 })
 export class RouterEventsComponent implements OnInit {
 
-  event: Event;
+  private event: Event;
 
   constructor(private router: Router) {
   }

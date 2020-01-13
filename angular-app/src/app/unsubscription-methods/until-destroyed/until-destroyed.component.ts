@@ -9,8 +9,8 @@ import {untilDestroyed} from 'ngx-take-until-destroy';
 })
 export class UntilDestroyedComponent implements OnInit, OnDestroy {
 
-  everySecond = timer(0, 1000);
-  everyThirdSecond = timer(0, 3000);
+  private everySecond = timer(0, 1000);
+  private everyThirdSecond = timer(0, 3000);
 
   constructor() {
   }

@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs';
 })
 export class HttpclientComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription;
+  private subscription: Subscription;
 
   title: string;
 

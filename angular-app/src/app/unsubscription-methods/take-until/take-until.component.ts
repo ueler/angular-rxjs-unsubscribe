@@ -11,8 +11,8 @@ export class TakeUntilComponent implements OnInit, OnDestroy {
 
   private readonly ngDestroy = new Subject();
 
-  everySecond = timer(0, 1000);
-  everyThirdSecond = timer(0, 3000);
+  private everySecond = timer(0, 1000);
+  private everyThirdSecond = timer(0, 3000);
 
   constructor() {
   }

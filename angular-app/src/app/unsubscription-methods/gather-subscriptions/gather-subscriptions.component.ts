@@ -10,8 +10,8 @@ export class GatherSubscriptionsComponent implements OnInit, OnDestroy {
 
   private readonly subscription = new Subscription();
 
-  everySecond = timer(0, 1000);
-  everyThirdSecond = timer(0, 3000);
+  private everySecond = timer(0, 1000);
+  private everyThirdSecond = timer(0, 3000);
 
   constructor() {
   }
