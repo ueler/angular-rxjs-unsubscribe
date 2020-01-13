@@ -66,13 +66,23 @@ When you should unsubscribe when the component gets destroyed.
 # Recommended ways to unsubscribe
 One way is to assign the subscription to a class property and manually unsubscribe in ``ngOnDestroy``.
 ```
+private subscription: Subscription;
+
+ngOnInit() {
+this.subscription = timer(0, 1000)
+  .subscribe(() => {
+    this.counter++;
+    this.titleService.setTitle('Counter ' + this.counter);
+  });
+}
+
 ngOnDestroy() {
     // Avoid side effects and memory leak by unsubscribing:
     this.subscription.unsubscribe();
 }
 ```
 
-However, its not feasible for large applications with many subscriptions, 
+However, it's not feasible for large applications with many subscriptions, 
 as its cumbersome to write and introduces a lot of obfuscating code.
 
 Another way of handling it, would be to collect all subscriptions and unsubscribe them at once:
@@ -133,7 +143,7 @@ ngOnDestroy() {
 }
 ```
 When the component gets destroyed, the observable ``ngDestroy`` gets completed, causing the subscriptions to complete.
-Thus memory leaks and side effects are avoided.
+Thus memory leaks and unwanted side effects are avoided.
 
 Drawbacks: As with the other methods, it's still quite verbose and error-prone.
 
