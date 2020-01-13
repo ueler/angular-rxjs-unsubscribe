@@ -34,7 +34,6 @@ If the subscription callback from an observables that does not eventually comple
 the destroyed component cannot be garbage collected thus resulting in a memory leak. 
 Therefore you should always unsubscribe in that case.
 
-### Observables that eventually complete
 Observables that don't eventually complete (for example an observable emitting a value each second) should be cancelled always, 
 since the callback logic from the destroyed component still runs (infinitely) in the background otherwise.
 
@@ -45,7 +44,7 @@ The Angular HttpClient creates an observable that eventually completes. Therefor
 For observables from the ``ActivatedRoute`` you do not have to unsubscribe manually.
 
 ### Angular Router events
-For Angular Router events (``NavigationStart``, ``NavigationEnd``, ...) you have to manually unsubscribe.
+For Angular Router events (``NavigationStart``, ``NavigationEnd``, ...) you may have to manually unsubscribe.
 
 ### Overview
 When you should unsubscribe when the component gets destroyed.
