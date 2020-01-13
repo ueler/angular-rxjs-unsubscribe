@@ -1,16 +1,15 @@
-# When should I unsubscribe from RxJS observables in Angular?
-There's a lot of confusion in the community about the question if and when you have to unsubscribe 
-from RxJS observables in Angular.
+# When should I unsubscribe from RxJS observables in Angular components?
+## Intro
+There's a lot of confusion in the community about the question if and when you have to unsubscribe manually
+from RxJS observables in Angular components.
 
 Although there are some quite nice StackOverflow posts about this question, there is no clear guide 
 that contains all relevant information explained by examples.
 
-This repository provides a guide for common situations and an Angular project to examine the problems by yourself.
+### Angular components and observables
+Our guide focuses on issues with components using observables. 
 
-## Angular components and observables
-The guide focuses on issues with components using observables. 
-
-A typical component lifecycle in an Angular CRUD application contains the following steps (in a simplified version):
+A typical component lifecycle in an Angular CRUD application contains the following steps (simplified version):
 1. User navigates to component ``A``
 2. Component ``A`` gets initialized (constructor and ``ngOnInit`` are invoked)
 3. Some logic is called to load data (e.g. using ``HttpClient``).  
@@ -19,18 +18,37 @@ A typical component lifecycle in an Angular CRUD application contains the follow
 5. Component ``A`` gets destroyed (``ngOnDestroy`` is invoked)
 6. ...
 
+This repository provides a guide explaining when you have to unsubscribe manually from subscriptions
+ (when component gets destroyed) made in step 3 together with the examples.
 
-## Conclusion
-Whether you have to unsubscribe or not heavily depends on the callback logic you are using in the observables subscription.
+## A guide for common situations
+Whether you have to unsubscribe or not depends on the callback logic you are using in the observables subscription.
 
-If the callback executes code with side effects (affecting global application state) you should always unsubscribe
-when the component gets destroyed.
+### Side effects
+If the callback code from the subscription executes code with side effects (e.g. affecting global application state) 
+you should always consider to manually unsubscribe when the component gets destroyed. 
+Otherwise the current and correct application state can be falsely overwritten by callback execution from a destroyed component.
 
-If the callback uses member variables from the component class, there can be a memory leak when using observables 
-that don't complete, therefore you should always unsubscribe in that case.
+### Observables that don't complete
+If the subscription callback from an observables that does not eventually complete uses member variables from the component, 
+the destroyed component cannot be garbage collected thus resulting in a memory leak. 
+Therefore you should always unsubscribe in that case.
 
-Observables that don't complete should be cancelled always, 
-since the callback logic still runs (infinitely) in the background otherwise.
+### Observables that eventually complete
+Observables that don't eventually complete (for example an observable emitting a value each second) should be cancelled always, 
+since the callback logic from the destroyed component still runs (infinitely) in the background otherwise.
+
+### Angular HttpClient
+The Angular HttpClient creates an observable that eventually completes. Therefore the same applies.
+
+### Angular ActivatedRoute
+For observables from the ``ActivatedRoute`` you do not have to unsubscribe manually.
+
+### Angular Router events
+For Angular Router events (``NavigationStart``, ``NavigationEnd``, ...) you have to manually unsubscribe.
+
+### Overview
+When you should unsubscribe when the component gets destroyed.
 
 |                                        | Side effects    | Memory leaks | Should unsubscribe |
 |----------------------------------------|-----------------|--------------|--------------------|
@@ -40,8 +58,8 @@ since the callback logic still runs (infinitely) in the background otherwise.
 | _Angular ActivatedRoute_               | No              | No           | No (4)             |
 | _Angular Router events_                | Possible (1)    | Possible (2) | Yes                |
 
-(1): If you execute methods with side effects in the callback.  
-(2): If you use member variables from the component in the callback.  
+(1): If you execute methods with side effects in the subscription callback.  
+(2): If you use member variables from the component in the subscription callback.  
 (3): Assuming the observable completes.  
 (4): You don't have to, but are free to unsubscribe anyway.
 
