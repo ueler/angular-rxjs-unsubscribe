@@ -314,7 +314,7 @@ This means that the same findings from the case study [Observables that eventual
 
 Why? Since network calls can be arbitrarily delayed, the observable can complete when you already navigated to another component.
 
-## Case study
+### Investigation method
 We added a little server written in Go under the folder ``go-server`` to the project, 
 such that the effect of delayed network calls can be demonstrated.
 
