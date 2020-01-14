@@ -38,7 +38,8 @@ Observables that don't eventually complete (for example an observable emitting a
 since the callback logic from the destroyed component still runs (infinitely) in the background otherwise.
 
 ### Angular HttpClient
-The Angular HttpClient creates an observable that eventually completes. Therefore the same applies.
+The Angular HttpClient creates an observable that eventually completes. Therefore it is prone to unwanted side effects 
+but not to memory leaks.
 
 ### Angular ActivatedRoute
 For observables from the ``ActivatedRoute`` you do not have to unsubscribe manually.
