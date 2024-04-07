@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 
@@ -7,7 +7,7 @@ import {Title} from '@angular/platform-browser';
   templateUrl: './router-param-map.component.html',
   styleUrls: ['./router-param-map.component.scss']
 })
-export class RouterParamMapComponent implements OnInit, OnDestroy {
+export class RouterParamMapComponent implements OnInit {
 
   paramMap?: ParamMap;
   queryParamMap?: ParamMap;
@@ -25,9 +25,6 @@ export class RouterParamMapComponent implements OnInit, OnDestroy {
       this.queryParamMap = queryParamMap;
       this.titleService.setTitle(queryParamMap.get('queryParam') ?? "queryParam undefined");
     });
-  }
-
-  ngOnDestroy() {
   }
 
 }

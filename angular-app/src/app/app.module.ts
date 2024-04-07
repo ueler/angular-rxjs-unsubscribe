@@ -16,6 +16,9 @@ import { RouterEventsComponent } from './router-events/router-events.component';
 import { ComponentTreeComponent } from './component-tree/component-tree.component';
 import { SubComponentOneComponent } from './component-tree/sub-component-one/sub-component-one.component';
 import { SubComponentTwoComponent } from './component-tree/sub-component-one/sub-component-two/sub-component-two.component';
+import {
+  TakeUntilDestroyedComponent
+} from "./unsubscription-methods/take-until-destroyed/take-until-destroyed.component";
 
 @NgModule({
   declarations: [
@@ -31,7 +34,8 @@ import { SubComponentTwoComponent } from './component-tree/sub-component-one/sub
     RouterEventsComponent,
     ComponentTreeComponent,
     SubComponentOneComponent,
-    SubComponentTwoComponent
+    SubComponentTwoComponent,
+    TakeUntilDestroyedComponent
   ],
   imports: [
     BrowserModule,

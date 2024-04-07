@@ -1,4 +1,5 @@
-<h1>When to unsubscribe in Angular - Examples</h1>
+<h1>When to unsubscribe in Angular</h1>
+<h2>Examples</h2>
 <ul>
   <li>
     <a [routerLink]="RoutingLinks.emptyComponent">Empty component</a>
@@ -27,6 +28,21 @@
   </li>
   <li>
     <a [routerLink]="RoutingLinks.componentTree">Component tree</a>
+  </li>
+</ul>
+<h2>Unsubscription methods</h2>
+<ul>
+  <li>
+    <a [routerLink]="RoutingLinks.unsubscriptionUntilDestroyed">Unsubscribe with untilDestroyed</a>
+  </li>
+  <li>
+    <a [routerLink]="RoutingLinks.unsubscriptionTakeUntilDestroyed">Unsubscribe with takeUntilDestroyed</a>
+  </li>
+  <li>
+    <a [routerLink]="RoutingLinks.unsubscriptionTakeUntil">Unsubscribe with takeUntil</a>
+  </li>
+  <li>
+    <a [routerLink]="RoutingLinks.unsubscriptionGather">Unsubscribe with subscription gathering</a>
   </li>
 </ul>
 <hr>

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {Subscription, timer} from 'rxjs';
 
 @Component({
@@ -6,21 +6,20 @@ import {Subscription, timer} from 'rxjs';
   templateUrl: './gather-subscriptions.component.html',
   styleUrls: ['./gather-subscriptions.component.scss']
 })
-export class GatherSubscriptionsComponent implements OnInit, OnDestroy {
+export class GatherSubscriptionsComponent implements OnDestroy {
 
   private readonly subscription = new Subscription();
 
-  private everySecond = timer(0, 1000);
-  private everyThirdSecond = timer(0, 3000);
+  private everySecond$ = timer(0, 1000);
+  private everyThirdSecond$ = timer(0, 3000);
 
   constructor() {
-  }
-
-  ngOnInit() {
-    this.subscription.add(this.everySecond.subscribe(() => {
+    this.subscription.add(this.everySecond$.subscribe(() => {
+      console.log("GatherSubscriptionsComponent everySecond$ emitted");
       // some logic here
     }));
-    this.subscription.add(this.everyThirdSecond.subscribe(() => {
+    this.subscription.add(this.everyThirdSecond$.subscribe(() => {
+      console.log("GatherSubscriptionsComponent everyThirdSecond$ emitted");
       // some logic here
     }));
   }
