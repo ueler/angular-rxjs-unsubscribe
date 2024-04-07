@@ -36,7 +36,7 @@ The first and most trivial case is an observable that does not complete.
 
 Say you have a timer observable in your component, like in our case study component ``RxjsTimerComponent``
 ```
-this.subscription = timer(0, 1000)
+timer(0, 1000)
     .subscribe(() => {
         this.counter++;
         this.titleService.setTitle('Counter ' + this.counter);
@@ -60,18 +60,18 @@ and ``this.titleService`` in the observables callback method.
 In fact, by navigating back and forth between ``EmptyComponent`` and ``RxjsTimerComponent`` we can create many 
 ``RxjsTimerComponent`` objects that don't get cleaned up. Thus we indeed created a memory leak in our example.
 
-NOTE: If you don't use any references (like member variables) from the component in the callback, 
+Note: If you don't use any references (like member variables) from the component in the callback, 
 the component gets garbage collected and there is no memory leak.
 
 ### Summary
-__ALWAYS unsubscribe if the observable does not complete or if you are not sure if it completes, 
+__Always unsubscribe if the observable does not complete or if you are not sure if it completes, 
 since the callback logic still runs in the background otherwise, 
 possibly creating memory leaks and unwanted side effects.__
 
 ## Observables that eventually complete
-We created the component ``RxjsTimerComplete``. It contains the following observable:
+We created the component ``RxjsTimerCompleteComponent``. It contains the following observable:
 ```
-this.subscription = timer(0, 1000)
+timer(0, 1000)
     .pipe(take(5))
     .subscribe(() => {
         this.counter++;
@@ -99,7 +99,7 @@ the component ``RxjsTimerComplete`` always eventually gets garbage collected aft
 So there is no memory leak.
 
 ### Summary
-__ALWAYS unsubscribe if you execute code with side effects in your callback.__
+__Always unsubscribe if you execute code with side effects in your callback.__
 
 ## Observables from the Angular HttpClient
 Let's have a look at the angular source code to understand how an observable created from the HttpClient works.
@@ -132,7 +132,7 @@ The GET call delays the response by 5 seconds and then returns an object with a 
 The component sets the document title with the received data:
 
 ```  
-this.subscription = this.httpClient.get<ApiResponse>('/api').subscribe((result) => {
+this.httpClient.get<ApiResponse>('/api').subscribe((result) => {
      this.title = result.title;
      this.titleService.setTitle(result.title);
 });
@@ -148,7 +148,7 @@ Are possible due to network latencies. The callback still gets executed, even if
 After the call completes the component gets garbage collected (even if navigated to another component).
 
 ### Summary
-__ALWAYS unsubscribe if you execute code with side effects in your callback.__
+__Always unsubscribe if you execute code with side effects in your callback.__\
 Many get that wrong, since they have almost no latency in their network calls when testing their application.
 If you do not execute methods with unwanted side effects, you do not have to unsubscribe.
 Memory leaks are avoided by the HttpClient as the observable completes itself.
@@ -179,7 +179,7 @@ The component gets garbage collected (after the second navigation from the compo
 So the statement from the documentation is correct and you don't have to manually unsubscribe when using observables
 from ``ActivatedRoute``.
 
-NOTE: This is only valid for ``ActivatedRoute`` observables and not for other router observables (as shown below)!
+Note: This is only valid for ``ActivatedRoute`` observables and not for other router observables (as shown below)!
 
 
 ## Angular routing: Router events (NavigationStart, etc...)
@@ -218,11 +218,3 @@ component.
 As expected, only the component with the timer does not get garbage collected.
 This is good news, as this means the third party components (as used as in this example) 
 cannot affect memory leaks on your components.
-
-
-# Other resources
-### Angular/RxJs When should I unsubscribe from Subscription:
-https://stackoverflow.com/questions/38008334/angular-rxjs-when-should-i-unsubscribe-from-subscription
-
-### Is it necessary to unsubscribe from observables created by Http methods?
-https://stackoverflow.com/questions/35042929/is-it-necessary-to-unsubscribe-from-observables-created-by-http-methods
