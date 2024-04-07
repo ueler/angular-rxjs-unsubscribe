@@ -9,7 +9,7 @@ import {
   PATH_ROUTER_EVENTS,
   PATH_ROUTER_PARAM_MAP,
   PATH_RXJS_TIMER,
-  PATH_RXJS_TIMER_COMPLETE,
+  PATH_RXJS_TIMER_COMPLETE, PATH_UNSUBSCRIPTION_ASYNC_PIPE,
   PATH_UNSUBSCRIPTION_GATHER,
   PATH_UNSUBSCRIPTION_TAKE_UNTIL, PATH_UNSUBSCRIPTION_TAKE_UNTIL_DESTROYED,
   PATH_UNSUBSCRIPTION_UNTIL_DESTROYED
@@ -27,6 +27,7 @@ import {UntilDestroyedComponent} from "./unsubscription-methods/until-destroyed/
 import {
   TakeUntilDestroyedComponent
 } from "./unsubscription-methods/take-until-destroyed/take-until-destroyed.component";
+import {AsyncPipeComponent} from "./unsubscription-methods/async-pipe/async-pipe.component";
 
 
 const routes: Routes = [
@@ -42,6 +43,7 @@ const routes: Routes = [
   {path: PATH_UNSUBSCRIPTION_TAKE_UNTIL, component: TakeUntilComponent},
   {path: PATH_UNSUBSCRIPTION_UNTIL_DESTROYED, component: UntilDestroyedComponent},
   {path: PATH_UNSUBSCRIPTION_TAKE_UNTIL_DESTROYED, component: TakeUntilDestroyedComponent},
+  {path: PATH_UNSUBSCRIPTION_ASYNC_PIPE, component: AsyncPipeComponent},
 ];
 
 @NgModule({

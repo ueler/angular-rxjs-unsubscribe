@@ -9,6 +9,7 @@ export const PATH_UNSUBSCRIPTION_GATHER = 'unsubscription-gather';
 export const PATH_UNSUBSCRIPTION_TAKE_UNTIL = 'unsubscription-take-until';
 export const PATH_UNSUBSCRIPTION_UNTIL_DESTROYED = 'unsubscription-until-destroyed';
 export const PATH_UNSUBSCRIPTION_TAKE_UNTIL_DESTROYED = 'unsubscription-take-until-destroyed';
+export const PATH_UNSUBSCRIPTION_ASYNC_PIPE = 'unsubscription-async-pipe';
 
 export class RoutingLinks {
   static emptyComponent = PATH_EMPTY;
@@ -22,4 +23,5 @@ export class RoutingLinks {
   static unsubscriptionTakeUntil = PATH_UNSUBSCRIPTION_TAKE_UNTIL;
   static unsubscriptionUntilDestroyed = PATH_UNSUBSCRIPTION_UNTIL_DESTROYED;
   static unsubscriptionTakeUntilDestroyed = PATH_UNSUBSCRIPTION_TAKE_UNTIL_DESTROYED;
+  static unsubscriptionAsyncPipe = PATH_UNSUBSCRIPTION_ASYNC_PIPE;
 }
