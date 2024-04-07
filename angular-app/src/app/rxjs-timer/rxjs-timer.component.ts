@@ -9,7 +9,7 @@ import {Title} from '@angular/platform-browser';
 })
 export class RxjsTimerComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription;
+  private subscription!: Subscription;
 
   counter = 0;
 

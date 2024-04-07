@@ -9,7 +9,7 @@ import {takeUntil} from 'rxjs/operators';
 })
 export class TakeUntilComponent implements OnInit, OnDestroy {
 
-  private readonly ngDestroy = new Subject();
+  private readonly ngDestroy = new Subject<void>();
 
   private everySecond = timer(0, 1000);
   private everyThirdSecond = timer(0, 3000);

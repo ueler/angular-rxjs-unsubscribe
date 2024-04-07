@@ -1,13 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {timer} from 'rxjs';
-import {untilDestroyed} from 'ngx-take-until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-until-destroyed',
   templateUrl: './until-destroyed.component.html',
   styleUrls: ['./until-destroyed.component.scss']
 })
-export class UntilDestroyedComponent implements OnInit, OnDestroy {
+export class UntilDestroyedComponent implements OnInit {
 
   private everySecond = timer(0, 1000);
   private everyThirdSecond = timer(0, 3000);
@@ -25,9 +26,5 @@ export class UntilDestroyedComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         // some logic here
       });
-  }
-
-  ngOnDestroy() {
-    // needed for untilDestroyed
   }
 }

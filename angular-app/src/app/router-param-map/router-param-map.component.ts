@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 
 @Component({
@@ -9,8 +9,8 @@ import {Title} from '@angular/platform-browser';
 })
 export class RouterParamMapComponent implements OnInit, OnDestroy {
 
-  paramMap: any;
-  queryParamMap: any;
+  paramMap?: ParamMap;
+  queryParamMap?: ParamMap;
 
   constructor(private activatedRoute: ActivatedRoute,
               private titleService: Title) {
@@ -19,11 +19,11 @@ export class RouterParamMapComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe((paramMap) => {
       this.paramMap = paramMap;
-      this.titleService.setTitle(paramMap.get('param'));
+      this.titleService.setTitle(paramMap.get('param') ?? "param undefined");
     });
     this.activatedRoute.queryParamMap.subscribe((queryParamMap) => {
       this.queryParamMap = queryParamMap;
-      this.titleService.setTitle(queryParamMap.get('queryParam'));
+      this.titleService.setTitle(queryParamMap.get('queryParam') ?? "queryParam undefined");
     });
   }
 

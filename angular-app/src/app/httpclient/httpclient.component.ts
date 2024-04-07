@@ -10,9 +10,9 @@ import {Subscription} from 'rxjs';
 })
 export class HttpclientComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription;
+  private subscription!: Subscription;
 
-  title: string;
+  title: string = "";
 
   constructor(private httpClient: HttpClient,
               private titleService: Title) {
@@ -33,5 +33,5 @@ export class HttpclientComponent implements OnInit, OnDestroy {
 }
 
 class ApiResponse {
-  title: string;
+  title!: string;
 }
